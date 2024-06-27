@@ -1,9 +1,8 @@
 package config;
 import java.sql.*;
 public class Conexion {
-    private String usuario_bd = "root";
-    private String password_bd = "monchillo24";
-    private String url = "jdbc:sqlserver://localhost:1433;databaseName=investigadores;encrypt=false;trustServerCertificate=false";
+    private String  usuario= "root";
+    private String password = "monchillo24";
 
     private Connection cnn;
 
@@ -11,7 +10,7 @@ public class Conexion {
     public Connection establecerConexion() throws Exception {
         try {
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-            cnn = DriverManager.getConnection(url, usuario_bd, password_bd);
+            cnn = DriverManager.getConnection("jdbc:sqlserver://localhost:1433;databaseName=investigadores;encrypt=false;trustServerCertificate=false", usuario, password);
             return cnn;
         }
         catch (SQLException e){
@@ -20,4 +19,3 @@ public class Conexion {
         }
     }
 }
-
