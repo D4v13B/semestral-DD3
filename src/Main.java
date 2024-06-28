@@ -1,11 +1,11 @@
-import config.Conexion;
-
-import java.sql.Connection;
+import app.Investigador;
+import app.OperacionesProyectos;
+import java.util.LinkedList;
 
 public class Main {
     public static void main(String[] args) throws Exception {
-        Conexion obj = new Conexion();
+        OperacionesProyectos operacionesProyectos = new OperacionesProyectos();
 
-        Connection cnn = obj.establecerConexion();
+
     }
 }

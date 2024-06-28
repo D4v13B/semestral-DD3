@@ -1,9 +1,12 @@
 package app;
 
+import java.util.LinkedList;
+
 public class Publicaciones {
     private int publiId;
     private String publiTitulo;
     private String publiFechaPublicacion;
+    private LinkedList<Investigador> autores;
 
     public Publicaciones(String publiFechaPublicacion, String publiTitulo, int publiId) {
         this.publiFechaPublicacion = publiFechaPublicacion;
