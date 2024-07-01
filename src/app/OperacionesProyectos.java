@@ -23,9 +23,9 @@ public class OperacionesProyectos {
 
             rs = st.executeQuery("SELECT inv.* FROM investigadores inv INNER JOIN investigadores_proyectos ip ON inv.inve_id = ip.inve_id WHERE ip.proy_id = " + proy_id);
 
-            Investigador inv = new Investigador();
 
             while(rs.next()){
+                Investigador inv = new Investigador();
                 inv.setInveId(rs.getInt("inve_id"));
                 inv.setInveArea(rs.getString("inve_area"));
                 inv.setInveNombre(rs.getString("inve_nombre"));
@@ -129,7 +129,7 @@ public class OperacionesProyectos {
                 proyecto.setProyId(rs.getInt("proy_id"));
                 proyecto.setProyCodigo(rs.getString("proy_codigo"));
                 proyecto.setProyNombre(rs.getString("proy_nombre"));
-                proyecto.setProyHorasDedicacion(rs.getString("proy_horas_dedicacion"));
+                proyecto.setProyHorasDedicacion(rs.getInt("proy_horas_dedicacion"));
                 proyecto.setProyFechaInicio(rs.getString("proy_fecha_inicio"));
                 proyecto.setProyFechaFin(rs.getString("proy_fecha_fin"));
                 proyecto.setProyDescripcion(rs.getString("proy_descripcion"));
@@ -165,9 +165,9 @@ public class OperacionesProyectos {
                 proyecto.setProyId(rs.getInt("proy_id"));
                 proyecto.setProyCodigo(rs.getString("proy_codigo"));
                 proyecto.setProyNombre(rs.getString("proy_nombre"));
-                proyecto.setProyHorasDedicacion(rs.getString("proy_horas_dedicacion"));
+                proyecto.setProyHorasDedicacion(rs.getInt("proy_horas_dedicacion"));
                 proyecto.setProyFechaInicio(rs.getString("proy_fecha_inicio"));
-                proyecto.setProyFechaFin(rs.getString("proy_fecha_fin"));
+                proyecto.setProyFechaFin(rs.getString("proy_fecha_final"));
                 proyecto.setProyDescripcion(rs.getString("proy_descripcion"));
 
                 proyectosList.add(proyecto);

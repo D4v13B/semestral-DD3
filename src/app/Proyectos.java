@@ -4,7 +4,7 @@ public class Proyectos {
     private int proyId;
     private String proyCodigo;
     private String proyNombre;
-    private String proyHorasDedicacion;
+    private int proyHorasDedicacion;
     private String proyFechaInicio;
     private String proyFechaFin;
     private String proyDescripcion;
@@ -13,7 +13,7 @@ public class Proyectos {
 
     }
 
-    public Proyectos(int proyId, String proyCodigo, String proyNombre, String proyHorasDedicacion, String proyFechaInicio, String proyFechaFin, String proyDescripcion) {
+    public Proyectos(int proyId, String proyCodigo, String proyNombre, int proyHorasDedicacion, String proyFechaInicio, String proyFechaFin, String proyDescripcion) {
         this.proyId = proyId;
         this.proyCodigo = proyCodigo;
         this.proyNombre = proyNombre;
@@ -47,11 +47,11 @@ public class Proyectos {
         this.proyNombre = proyNombre;
     }
 
-    public String getProyHorasDedicacion() {
+    public int getProyHorasDedicacion() {
         return proyHorasDedicacion;
     }
 
-    public void setProyHorasDedicacion(String proyHorasDedicacion) {
+    public void setProyHorasDedicacion(int proyHorasDedicacion) {
         this.proyHorasDedicacion = proyHorasDedicacion;
     }
 

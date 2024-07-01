@@ -29,13 +29,14 @@ public class OperacionesInvestigador {
             //Vamos a recibir la respuesta
             rs = callableStatement.getResultSet();
 
-            Proyectos proyectoTmp = new Proyectos();
 
             //Recorrer la respuesta del procedimiento
             while(rs.next()){
+                Proyectos proyectoTmp = new Proyectos();
                 proyectoTmp.setProyId(rs.getInt("proy_id"));
                 proyectoTmp.setProyNombre(rs.getString("proy_nombre"));
-                proyectoTmp.setProyDescripcion(rs.getString("proy_decripcion"));
+                proyectoTmp.setProyHorasDedicacion(rs.getInt("proy_horas_dedicacion"));
+                proyectoTmp.setProyDescripcion(rs.getString("proy_descripcion"));
                 proyectoTmp.setProyFechaInicio(rs.getString("proy_fecha_inicio"));
                 proyectoTmp.setProyFechaFin(rs.getString("proy_fecha_final"));
                 proyectoTmp.setProyCodigo(rs.getString("proy_codigo"));
@@ -174,7 +175,6 @@ public class OperacionesInvestigador {
         Connection cnn = null;
         LinkedList<Investigador> investigadoresList = new LinkedList<>();
         String query = null;
-        Investigador investigador = new Investigador();
 
         try {
             cnn =  con.establecerConexion(); //estableciendo la conección a la BD
@@ -183,6 +183,7 @@ public class OperacionesInvestigador {
             rs = st.executeQuery(query); //ejecutando el query y guardando el resultado en la variable rs
 
             while (rs.next()) { //recorriendo el resultado de la consulta hasta que no haya mas registros
+                Investigador investigador = new Investigador();
                 // creando un nuevo objeto investigador añadiendo los datos de la consulta
                 investigador.setInveId (rs.getInt("inve_id"));
                 investigador.setInveNombre(rs.getString("inve_nombre"));
