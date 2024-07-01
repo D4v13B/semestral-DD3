@@ -12,12 +12,12 @@ public class OperacionesInvestigador {
     CallableStatement callableStatement;
 
     //Metodo para buscar proyectos por 1 investigador en especifico
-    public LinkedList<Proyectos> investigadoresXProyectos(int inve_id){
+    public LinkedList<Proyectos> investigadoresXProyectos(Conexion cnn, int inve_id){
         Connection con = null;
         LinkedList<Proyectos> proyectos = new LinkedList<>();
 
         try{
-            con = Conexion.establecerConexion();
+            con = cnn.establecerConexion();
             callableStatement = con.prepareCall("{call listProyectosXInvestigador(?)}");
 
             //Establecer los parametros de entrada

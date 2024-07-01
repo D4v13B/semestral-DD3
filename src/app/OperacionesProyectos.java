@@ -13,12 +13,12 @@ public class OperacionesProyectos {
     private ResultSet rs;
 
 //    Listado de investigadores por proyecto
-    public LinkedList<Investigador> investigadoresXProyectos(int proy_id){
+    public LinkedList<Investigador> investigadoresXProyectos(Conexion cnn, int proy_id){
         Connection con = null;
         LinkedList<Investigador> investigadors = new LinkedList<>();
 
         try{
-            con = Conexion.establecerConexion();
+            con = cnn.establecerConexion();
             st = con.createStatement();
 
             rs = st.executeQuery("SELECT inv.* FROM investigadores inv INNER JOIN investigadores_proyectos ip ON inv.inve_id = ip.inve_id WHERE ip.proy_id = " + proy_id);
