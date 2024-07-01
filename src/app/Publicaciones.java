@@ -14,6 +14,10 @@ public class Publicaciones {
         this.publiId = publiId;
     }
 
+    public Publicaciones() {
+
+    }
+
     public int getPubliId() {
         return publiId;
     }
