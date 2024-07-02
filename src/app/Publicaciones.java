@@ -8,15 +8,7 @@ public class Publicaciones {
     private String publiFechaPublicacion;
     private LinkedList<Investigador> autores;
 
-    public Publicaciones(String publiFechaPublicacion, String publiTitulo, int publiId) {
-        this.publiFechaPublicacion = publiFechaPublicacion;
-        this.publiTitulo = publiTitulo;
-        this.publiId = publiId;
-    }
-
-    public Publicaciones() {
-
-    }
+    public Publicaciones() {}
 
     public int getPubliId() {
         return publiId;

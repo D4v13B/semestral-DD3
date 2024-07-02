@@ -2,6 +2,9 @@ package app;
 
 import config.Conexion;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -11,6 +14,15 @@ import java.util.LinkedList;
 public class OperacionesProyectos {
     private Statement st;
     private ResultSet rs;
+    private PrintWriter respaldo;
+
+    public OperacionesProyectos() throws Exception {
+        try{
+            respaldo = new PrintWriter(new FileWriter("proyectosEliminados.csv"));
+        }catch(IOException e){
+            throw new Exception("Error al crear el archivo de respaldo: " + e.getMessage());
+        }
+    }
 
 //    Listado de investigadores por proyecto
     public LinkedList<Investigador> investigadoresXProyectos(Conexion cnn, int proy_id){
@@ -21,7 +33,7 @@ public class OperacionesProyectos {
             con = cnn.establecerConexion();
             st = con.createStatement();
 
-            rs = st.executeQuery("SELECT inv.* FROM investigadores inv INNER JOIN investigadores_proyectos ip ON inv.inve_id = ip.inve_id WHERE ip.proy_id = " + proy_id);
+                rs = st.executeQuery("SELECT inv.* FROM investigadores inv INNER JOIN investigadores_proyectos ip ON inv.inve_id = ip.inve_id WHERE ip.proy_id = " + proy_id);
 
 
             while(rs.next()){
@@ -33,6 +45,10 @@ public class OperacionesProyectos {
 
                 //Agregamos a la lista que vamos a retornar
                 investigadors.add(inv);
+            }
+
+            if(investigadors.isEmpty()){
+                throw new Exception("No se han asignado investigadores a este proyecto");
             }
 
             return investigadors;
@@ -182,4 +198,97 @@ public class OperacionesProyectos {
             throw new Exception("Error al obtener los proyectos: " + e.getMessage());
         }
     }
+
+    // Método para eliminar proyectos culminados y crear un respaldo
+    public String eliminarProyectos(Conexion con) throws Exception {
+        Connection cnn = null;
+        ResultSet rs = null;
+        String selectQuery = null, deleteQuery = null;
+
+        try {
+            cnn = con.establecerConexion();
+            st = cnn.createStatement();
+
+            selectQuery = "SELECT * FROM proyectos WHERE proy_fecha_final < GETDATE();";
+            rs = st.executeQuery(selectQuery);
+
+            respaldo.println("proy_id;proy_codigo;proy_nombre;proy_horas_dedicacion;proy_fecha_inicio;proy_fecha_final;proy_descripcion");
+
+            boolean verificarExist = false;
+
+            // Recorremos todos los registros del ResultSet
+            while (rs.next()) {
+                verificarExist = true;
+                // Escribir los proyectos en el archivo CSV
+                respaldo.printf("%d;%s;%s;%d;%s;%s;%s%n",
+                        rs.getInt("proy_id"),
+                        rs.getString("proy_codigo"),
+                        rs.getString("proy_nombre"),
+                        rs.getInt("proy_horas_dedicacion"),
+                        rs.getDate("proy_fecha_inicio").toString(),
+                        rs.getDate("proy_fecha_final").toString(),
+                        rs.getString("proy_descripcion")
+                );
+            }
+
+            rs.close();
+
+            if (!verificarExist) {
+                throw new Exception("No se encontraron proyectos finalizados");
+            }
+
+            respaldo.close();
+
+            deleteQuery = "DELETE FROM proyectos WHERE proy_fecha_final < GETDATE();";
+            st.executeUpdate(deleteQuery);
+
+            st.close();
+            cnn.close();
+            return "Se han eliminado los resistros exitosamente";
+        } catch (SQLException e) {
+            if (cnn != null) {
+                cnn.close();
+            }
+            throw new Exception("Error al eliminar el proyecto: " + e.getMessage());
+        }
+    }
+
+    public LinkedList<Proyectos> proyectosCulminados(Conexion con) throws Exception {
+        Connection cnn = null;
+        Statement stmt = null;
+        ResultSet rs = null;
+        LinkedList<Proyectos> proyectosList = new LinkedList<>();
+        String query = "SELECT * FROM proyectos WHERE proy_fecha_final < GETDATE();";
+
+        try {
+            cnn = con.establecerConexion();
+            stmt = cnn.createStatement();
+            rs = stmt.executeQuery(query);
+
+            while (rs.next()) {
+                Proyectos proyecto = new Proyectos(
+                        rs.getInt("proy_id"),
+                        rs.getString("proy_codigo"),
+                        rs.getString("proy_nombre"),
+                        rs.getInt("proy_horas_dedicacion"),
+                        rs.getString("proy_fecha_inicio"),
+                        rs.getString("proy_fecha_final"),
+                        rs.getString("proy_descripcion")
+                );
+                proyectosList.add(proyecto);
+            }
+
+            rs.close();
+            stmt.close();
+            cnn.close();
+
+            return proyectosList;
+        } catch (SQLException e) {
+            if (cnn != null) {
+                cnn.close();
+            }
+            throw new Exception("Error al obtener los proyectos: " + e.getMessage());
+        }
+    }
+
 }

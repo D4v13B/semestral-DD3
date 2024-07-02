@@ -44,6 +44,10 @@ public class OperacionesInvestigador {
                 proyectos.add(proyectoTmp);
             }
 
+            if(proyectos.isEmpty()){
+                throw new Exception("No se encontraron proyectos para este usuario");
+            }
+
             return proyectos;
         }catch (SQLException e){
             System.out.println(e.getMessage());
@@ -202,4 +206,41 @@ public class OperacionesInvestigador {
             throw new Exception ("Error...en la consulta de todos los registros");
         }
     }
+
+    public LinkedList<InvestigadorHoras> obtenerHorasDedicadas(Conexion con) throws Exception {
+        Connection cnn = null;
+        LinkedList<InvestigadorHoras> investigadorHorasList = new LinkedList<>();
+        String query = null;
+
+        try {
+            cnn = con.establecerConexion();
+            st = cnn.createStatement();
+
+            query = "SELECT i.inve_id, i.inve_nombre, SUM(p.proy_horas_dedicacion) AS horas_dedicacion " +
+                    "FROM investigadores i " +
+                    "JOIN investigadores_proyectos ip ON i.inve_id = ip.inve_id " +
+                    "JOIN proyectos p ON ip.proy_id = p.proy_id " +
+                    "GROUP BY i.inve_id, i.inve_nombre";
+
+            rs = st.executeQuery(query);
+
+            while (rs.next()) {
+                InvestigadorHoras investigadorHoras = new InvestigadorHoras();
+                investigadorHoras.setInveId(rs.getInt("inve_id"));
+                investigadorHoras.setInveNombre(rs.getString("inve_nombre"));
+                investigadorHoras.setHorasDedicacion(rs.getInt("horas_dedicacion"));
+
+                investigadorHorasList.add(investigadorHoras);
+            }
+
+            cnn.close();
+            return investigadorHorasList;
+        } catch (SQLException e) {
+            if (cnn != null) {
+                cnn.close();
+            }
+            throw new Exception("Error al obtener las horas de dedicación: " + e.getMessage());
+        }
+    }
+
 }

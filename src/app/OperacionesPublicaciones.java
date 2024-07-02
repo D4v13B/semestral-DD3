@@ -21,8 +21,7 @@ public class OperacionesPublicaciones {
             cnn = con.establecerConexion();
             st = cnn.createStatement();
 
-            query = "INSERT INTO publicaciones (publi_id, publi_titulo, publi_fecha_publicacion) VALUES (" +
-                    publicacion.getPubliId() + ", '" + publicacion.getPubliTitulo() + "', '" + publicacion.getPubliFechaPublicacion() + "')";
+            query = "INSERT INTO publicaciones (publi_titulo, publi_fecha_publicacion) VALUES (" + publicacion.getPubliTitulo() + "', '" + publicacion.getPubliFechaPublicacion() + "')";
             st.executeUpdate(query);
 
             cnn.close();

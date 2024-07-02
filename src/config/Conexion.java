@@ -10,7 +10,7 @@ public class Conexion {
     public Connection establecerConexion() throws Exception {
         try {
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-            cnn = DriverManager.getConnection("jdbc:sqlserver://localhost:1433;databaseName=investigadores;encrypt=false;trustServerCertificate=false", usuario, password);
+            cnn = DriverManager.getConnection("jdbc:sqlserver://localhost:1433;databaseName=Investigacion;encrypt=false;trustServerCertificate=false", usuario, password);
             return cnn;
         }
         catch (SQLException e){

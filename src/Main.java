@@ -5,6 +5,7 @@ import app.Publicaciones;
 import config.Conexion;
 import app.Proyectos;
 import app.Investigador;
+import app.InvestigadorHoras;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -16,11 +17,29 @@ public class Main {
     public static void main(String[] args) {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         OperacionesPublicaciones operacionesPublicaciones = new OperacionesPublicaciones();
-        OperacionesProyectos operacionesProyectos = new OperacionesProyectos();
+
         OperacionesInvestigador operacionesInvestigador = new OperacionesInvestigador();
+        InvestigadorHoras investigadorHoras = new InvestigadorHoras();
         Conexion con = new Conexion();
 
         Investigador investigador;
+
+        System.out.println("*******************************************************");
+        System.out.println("*                                                     *");
+        System.out.println("*          Universidad Tecnologica de Panama          *");
+        System.out.println("*                                                     *");
+        System.out.println("*           Desarrollo y Gestion de Software          *");
+        System.out.println("*                                                     *");
+        System.out.println("*                   Proyecto Final                    *");
+        System.out.println("*                                                     *");
+        System.out.println("*            Tema: Java y Base de Datos               *");
+        System.out.println("*                                                     *");
+        System.out.println("*                   Integrantes:                      *");
+        System.out.println("*                  Ericka Atencio                     *");
+        System.out.println("*                 David Bustamante                    *");
+        System.out.println("*                   Eliel García                      *");
+        System.out.println("*                                                     *");
+        System.out.println("*******************************************************");
 
         while (true) {
             try {
@@ -57,9 +76,12 @@ public class Main {
                             }
                         }catch (SQLException e){
                             System.out.println("Error SQL " + e.getMessage());
+                        }catch (Exception e){
+                            System.out.println(e.getMessage());
                         }
                         break;
                     case 2:
+                        OperacionesProyectos operacionesProyectos = new OperacionesProyectos();
                         // Código para listar investigadores por proyecto
                         LinkedList<Proyectos> proyectos = operacionesProyectos.obtenerProyectos(con);
                         System.out.printf("%-4s %-10s %-10s %-30s %-20s %-20s\n", "ID", "Código", "Nombre" ,"Horas de dedicación", "Fecha inicio", "Fecha fin");
@@ -74,18 +96,60 @@ public class Main {
                         int id = Integer.parseInt(reader.readLine());
 
                         LinkedList<Investigador> investigadors = operacionesProyectos.investigadoresXProyectos(con, id);
-                        System.out.println("Esto son los investigadores del proyecto------------------------------------");
+                        System.out.println("\nEsto son los investigadores del proyecto:");
                         System.out.printf("%-5s %-10s %-10s %-10s\n", "ID", "Nombre", "Area", "Código");
-                        System.out.println("----------------------------------------------------");
                         for (Investigador inv : investigadors) {
                             System.out.printf("%-5d %-10s %-10s %-10s\n", inv.getInveId(), inv.getInveNombre(), inv.getInveArea(), inv.getInveCodigo());
                         }
                         break;
                     case 3:
                         // Código para mostrar el total de horas de dedicación de cada investigador
+                        try {
+                            LinkedList<InvestigadorHoras> horasDedicadas = operacionesInvestigador.obtenerHorasDedicadas(con);
+                            System.out.println("HORAS DEDICADAS POR CADA INVESTIGADOR:");
+                            System.out.println("\nID" + "\t\t" + "Nombre" + "\t\t" + "Horas Dedicadas");
+
+                            for (InvestigadorHoras hd : horasDedicadas) {
+                                System.out.println(hd.getInveId() + "\t\t" + hd.getInveNombre() + "\t\t" + hd.getHorasDedicacion());
+                            }
+                        }catch(Exception e){
+                            System.out.print (e);  }
                         break;
                     case 4:
                         // Código para mostrar proyectos que culminan hoy y eliminarlos
+                        try{
+                            operacionesProyectos = new OperacionesProyectos();
+                            LinkedList<Proyectos> proyectosCulminados = operacionesProyectos.proyectosCulminados(con);
+
+                            if (!proyectosCulminados.isEmpty()) {
+                                System.out.println("PROYECTOS CULMINADOS A LA FECHA:");
+                                System.out.println("\nID" + "\t\t" + "Código" + "\t\t" + "Nombre" + "\t\t" + "Horas dedicadas" + "\t\t" + "Fecha de Inicio" + "\t\t" + "Fecha de Fin" + "\t\t" + "Descripción");
+
+                                for (Proyectos proyecto : proyectosCulminados) {
+                                    System.out.println("\n" + proyecto.getProyId() + "\t\t" + proyecto.getProyCodigo() + "\t" + proyecto.getProyNombre() + "\t" + proyecto.getProyHorasDedicacion() + "\t" + proyecto
+                                            .getProyFechaInicio() + "\t" + proyecto.getProyFechaFin() + "\t" + proyecto.getProyDescripcion());
+
+                                }
+
+                                System.out.println("\n\n¿Desea eliminar los registros?");
+                                String resp = "";
+                                while (!resp.equalsIgnoreCase("S") && !resp.equalsIgnoreCase("N")) {
+                                    System.out.println("\nSi la respuesta es 'Sí', ingrese 'S', de lo contrario ingrese 'N'");
+                                    resp = reader.readLine().toUpperCase();
+                                    if (resp.equals("S")) {
+                                        System.out.println(operacionesProyectos.eliminarProyectos(con));
+                                    } else if (resp.equals("N")) {
+                                        System.out.println("Se ha cancelado correctamente");
+                                    } else {
+                                        System.out.println("Respuesta no válida. Intente de nuevo.");
+                                    }
+                                }
+                            } else {
+                                System.out.println("No hay proyectos culminados.");
+                            }
+
+                        }catch(Exception e){
+                            System.out.print (e);  }
                         break;
                     case 5:
                         try {
@@ -96,7 +160,7 @@ public class Main {
                             System.out.println("Ingrese la fecha de publicación (YYYY-MM-DD):");
                             String publiFecha = reader.readLine();
                             Publicaciones publicacion = new Publicaciones();
-                            publicacion.setPubliId(publiId);
+//                            publicacion.setPubliId(publiId);
                             publicacion.setPubliTitulo(publiTitulo);
                             publicacion.setPubliFechaPublicacion(publiFecha);
                             operacionesPublicaciones.agregarPublicacion(con, publicacion);

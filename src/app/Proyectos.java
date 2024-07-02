@@ -9,9 +9,7 @@ public class Proyectos {
     private String proyFechaFin;
     private String proyDescripcion;
 
-    public Proyectos() {
-
-    }
+    public Proyectos() {}
 
     public Proyectos(int proyId, String proyCodigo, String proyNombre, int proyHorasDedicacion, String proyFechaInicio, String proyFechaFin, String proyDescripcion) {
         this.proyId = proyId;
